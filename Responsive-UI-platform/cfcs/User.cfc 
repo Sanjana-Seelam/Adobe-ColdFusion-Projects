@@ -1,0 +1,33 @@
+<cfcomponent>
+
+    <cffunction name="registerUser" access="public" returntype="boolean">
+        <cfargument name="username" type="string" required="true"/>
+        <cfargument name="password" type="string" required="true"/>
+        
+        <cfquery name="register" datasource="learning_platform">
+            INSERT INTO users (username, password)
+            VALUES (<cfqueryparam value="#arguments.username#" cfsqltype="cf_sql_varchar">, 
+                    <cfqueryparam value="#arguments.password#" cfsqltype="cf_sql_varchar">)
+        </cfquery>
+
+        <cfreturn true>
+    </cffunction>
+
+    <cffunction name="validateUser" access="public" returntype="struct">
+        <cfargument name="username" type="string" required="true"/>
+        <cfargument name="password" type="string" required="true"/>
+        
+        <cfquery name="user" datasource="learning_platform">
+            SELECT * FROM users 
+            WHERE username = <cfqueryparam value="#arguments.username#" cfsqltype="cf_sql_varchar">
+              AND password = <cfqueryparam value="#arguments.password#" cfsqltype="cf_sql_varchar">
+        </cfquery>
+
+        <cfif user.recordCount>
+            <cfreturn user>
+        <cfelse>
+            <cfreturn false>
+        </cfif>
+    </cffunction>
+
+</cfcomponent>
